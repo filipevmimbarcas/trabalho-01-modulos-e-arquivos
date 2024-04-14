@@ -1,3 +1,0 @@
-fortinet;40f;fgqwertyuiopasdkf;10;2024-04-13
-fortinet;30e;fgklmnbvhgytueopd;3;2024-04-13
-fortinet;80f;fgklvbbvhgytueoqq;9;2024-04-13
