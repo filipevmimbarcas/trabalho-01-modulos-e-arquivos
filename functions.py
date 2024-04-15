@@ -16,14 +16,10 @@ def GenerateId()->int:
       file = open(fileName)
       lines = file.readlines()
       file.close()
-      counter = 1
-
-      for line in lines:
-        line = line.split(';')
-        if int(line[0]) == counter:
-          counter = counter + 1
-      
+      counter = int(lines[-1][0]) + 1
       return counter
+
+
 
 #Insere um dispositivo
 def Create():
@@ -101,3 +97,25 @@ def GetDevice():
       myTable.add_row([id,name.capitalize(),vendor.capitalize(),model.upper(),serial,createdAt])
   
   print(myTable)      
+
+def deleteByLine():
+  GetAll()
+  id = int(input('Enter de ID: '))
+
+  file = open(fileName)
+  lines = file.readlines()
+  file.close()
+  
+  choice = input('Do you want to continue? [y/n]: ')
+  if choice.upper() == 'Y':
+    index = 0
+    for i, line in enumerate(lines):
+      if int(line[0]) == id:
+        index = i
+  
+    lines.pop(index)
+    file = open(fileName,'w')
+    file.write(''.join(lines))
+    file.close()
+  else:
+    print('Id not found')

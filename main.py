@@ -14,6 +14,8 @@ while True:
     functions.GetAll()
   elif option == 3:
     functions.GetDevice()
+  elif option == 4:
+    functions.deleteByLine()
   else:
     print('Program terminated')
     break
