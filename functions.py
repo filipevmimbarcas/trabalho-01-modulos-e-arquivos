@@ -5,27 +5,37 @@ from datetime import date
 fileName = 'db_devices.txt'
 
 
+def Title(text,symbol='-',quantity=50):
+  print()
+  print(f'\t\t\t[{text}]')
+  print(symbol*quantity)
+
+
+def ValidateFile(file)->bool:
+  if os.path.exists(file):
+    return True
+  else:
+    return False
+
 #Gera um id para inserir no arquivo
 def GenerateId()->int:
-
-  if not os.path.isfile(fileName):
-    print('There is no devices registered!')
-    counter = 1
-    return counter
+  if not ValidateFile(fileName):
+    return 1
   else:
-      file = open(fileName)
-      lines = file.readlines()
-      file.close()
-      counter = int(lines[-1][0]) + 1
-      return counter
-
-
+    file = open(fileName)
+    lines = file.readlines()
+    file.close()
+    counter = int(lines[-1][0]) + 1
+    return counter
 
 #Insere um dispositivo
 def Create():
   os.system('clear')
-  print('\t\t\t[Insert a device]')
+  Title('Insert a device')
 
+  if not ValidateFile(fileName):
+    print(f'file {fileName} does not exist, creating file... \n')
+  
   id = GenerateId()
   name = input('Name: ')
   vendor = input('Vendor: ')
@@ -46,21 +56,22 @@ def Create():
 #Lista todos os ativos
 def GetAll():
 
-  os.system('clear')
-  print('\t\t\t[Displaying all devices]')
-
-  if not os.path.isfile(fileName):
-    print('There is no devices registered!')
+  if not ValidateFile(fileName):
+    print(f'There are no registered devices, file {fileName} does not exist\n')
     return
-  
+
+  total = 0
+  os.system('clear')
+  Title('Displaying all devices')
+
   file = open(fileName)
   lines = file.readlines()
   file.close()
 
   myTable = PrettyTable(['Id','Name','Vendor','Model','Serial Number','Created at'])
 
-
   for line in lines:
+    total = total + 1
     parts = line.split(';')
 
     id = parts[0]
@@ -73,11 +84,16 @@ def GetAll():
     myTable.add_row([id,name.capitalize(),vendor.capitalize(),model.upper(),serial,createdAt])
 
   print(myTable)
+  print(f'Total: {total}')
 
 
 def GetDevice():
 
-  print('\t\t\t[Looking up for a device]')
+  if not ValidateFile(fileName):
+    print(f'There are no registered devices, file {fileName} does not exist\n')
+    return
+
+  Title('Looking up for a device')
   word = input('Enter search term: ')
 
   file = open(fileName)
@@ -99,7 +115,15 @@ def GetDevice():
   print(myTable)      
 
 def deleteByLine():
+
+  Title('Deleting a device')
+
+  if  not ValidateFile(fileName):
+    print(f'There are no registered devices, file {fileName} does not exist\n')
+    return
+
   GetAll()
+
   id = int(input('Enter de ID: '))
 
   file = open(fileName)
@@ -117,5 +141,11 @@ def deleteByLine():
     file = open(fileName,'w')
     file.write(''.join(lines))
     file.close()
+    print('Device deleted')
   else:
     print('Id not found')
+  
+  if len(lines) == 0:
+    os.remove(fileName)
+  
+
